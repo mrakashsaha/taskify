@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { AiOutlineFileAdd } from 'react-icons/ai';
 import { AuthContext } from '../Provider/AuthProvider';
 import moment from 'moment';
@@ -20,6 +20,36 @@ const TaskDashboard = () => {
             return res.data;
         }
     })
+
+    // Task by Category
+
+    // const { data: toDoTasksList = [], refetch: toDoRefetch, isPending: toDoIsPending } = useQuery({
+    //     queryKey: ["toDoTaskLists", user?.email],
+    //     enabled: !loading,
+    //     queryFn: async () => {
+    //         const res = await axiosPublic.get(`/task?email=${user?.email}&category=toDo`);
+    //         return res.data;
+    //     }
+    // })
+
+    // const { data: inProgressTasksList = [], refetch: inProgressRefetch, isPending: inProgressIsPending } = useQuery({
+    //     queryKey: ["inProgressTasksList", user?.email],
+    //     enabled: !loading,
+    //     queryFn: async () => {
+    //         const res = await axiosPublic.get(`/task?email=${user?.email}&category=inProgress`);
+    //         return res.data;
+    //     }
+    // })
+    // const { data: doneTasksList = [], refetch: doneRefetch, isPending: doneIsPending } = useQuery({
+    //     queryKey: ["doneTasksList", user?.email],
+    //     enabled: !loading,
+    //     queryFn: async () => {
+    //         const res = await axiosPublic.get(`/task?email=${user?.email}&category=done`);
+    //         return res.data;
+    //     }
+    // })
+
+
 
 
     const handleAddTask = (e) => {
@@ -53,7 +83,7 @@ const TaskDashboard = () => {
                         icon: "success",
                         title: "Task added sucessfully!"
                     });
-
+                    
                 }
             })
             .catch(error => console.log(error));
@@ -62,12 +92,14 @@ const TaskDashboard = () => {
 
     }
 
+
+
     return (
         <div>
             <div className='max-w-7xl mx-auto my-10 font-semibold p-4'>
                 <div className='flex flex-wrap justify-between flex-col lg:flex-row gap-8'>
 
-                    {/* Todo Column Dropable */}
+                    {/* Todo List */}
                     <div className='rounded flex-1 p-6 bg-base-200'>
                         <div>
                             <h2 className='text-lg'>To-do List</h2>
@@ -75,10 +107,10 @@ const TaskDashboard = () => {
                                 <button onClick={() => document.getElementById('my_modal_5').showModal()} className="btn btn-primary btn-outline w-full"> <AiOutlineFileAdd className='text-lg'></AiOutlineFileAdd> Add New Task</button>
                             </div>
 
-                            {/* To Task Card Dragable */}
+                            {/* Task Card */}
                             <div className='space-y-4'>
                                 {
-                                    taskList.map((toDoTask, idx) => <TaskCard idx={idx} key={toDoTask?._id} toDoTask={toDoTask} ></TaskCard>)
+                                    taskList.map((toDoTask, idx) => <TaskCard idx = {idx} key={toDoTask?._id} toDoTask={toDoTask} ></TaskCard>)
                                 }
                             </div>
 
@@ -86,33 +118,34 @@ const TaskDashboard = () => {
                     </div>
 
 
-                    {/* Todo List Dropable */}
+                    {/* Todo List */}
                     <div className=' rounded flex-1 p-6 bg-base-200'>
                         <h2 className='text-lg'>In Progress</h2>
                         {/* Task Card */}
                         <div className='space-y-4 mt-4'>
-                            {/* In Progress Task Card Draggable */}
-
+                            {/* {
+                                inProgressTasksList.map((toDoTask, idx) => <TaskCard idx={idx} key={toDoTask?._id} toDoTask={toDoTask} ></TaskCard>)
+                            } */}
                         </div>
                     </div>
 
 
-                    {/* Todo List Dropable */}
+                    {/* Todo List */}
                     <div className='rounded flex-1 p-6 bg-base-200'>
                         <h2 className='text-lg'>Done</h2>
                         {/* Task Card */}
                         <div className='space-y-4 mt-4'>
-                            {/* Done Task Card Dragable */}
-
-
+                            {/* {
+                                doneTasksList.map((toDoTask, idx) => <TaskCard idx={idx} key={toDoTask?._id} toDoTask={toDoTask} ></TaskCard>)
+                            } */}
                         </div>
                     </div>
 
                 </div>
 
                 {/* Modal for Add New Task */}
-                <dialog id="my_modal_5" className="modal modal-middle p-4">
-                    <div className="card-body rounded-md min-w-xs md:min-w-md bg-base-100">
+                <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
+                    <div className="card-body rounded-md min-w-md bg-base-100">
                         <div>
                             <form onSubmit={handleAddTask} className='fieldset'>
                                 <label className="fieldset-label">Title</label>
