@@ -77,7 +77,59 @@ Taskify is a modern, responsive task management application designed to help use
 - `cors`
 - `dotenv`
 
-# Contact
-Thanks You. For any questions or feedback, feel free to reach out:
 
-Email: mr.akashsaha@gmail.com
+## Installation
+
+### Frontend
+1. **Clone the client repository:**
+   ```bash
+   git clone https://github.com/mrakashsaha/taskify.git
+   ```
+2. **Navigate to the project directory:**
+   ```bash
+   cd taskify
+   ```
+3. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+4. **Create a `.env` file in the root directory and add your Firebase configuration:**
+   ```env
+   VITE_FIREBASE_API_KEY=your_api_key
+   VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
+   VITE_FIREBASE_PROJECT_ID=your_project_id
+   VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+   VITE_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+   VITE_FIREBASE_APP_ID=your_app_id
+   ```
+5. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+
+### Backend
+1. **Clone the server repository:**
+   ```bash
+   git clone https://github.com/mrakashsaha/taskifyServer.git
+   ```
+2. **Navigate to the project directory:**
+   ```bash
+   cd taskifyServer
+   ```
+3. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+4. **Create a `.env` file in the root directory and add your MongoDB connection string:**
+   ```env
+   MONGO_URI=your_mongodb_connection_string
+   PORT=5000
+   ```
+5. **Start the server:**
+   ```bash
+   npm start
+   ```
+
+## Contributors
+For any questions or feedback, feel free to reach out:
+**Akash Kumar Saha** - [GitHub](https://github.com/mrakashsaha)
