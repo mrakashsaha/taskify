@@ -42,7 +42,6 @@ const TaskBoard = () => {
 
 
   const updateTaskCategory = (updateInfo) => {
-    console.log("mutation hitted");
 
     console.log(updateInfo);
 

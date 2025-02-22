@@ -22,7 +22,7 @@ const NavBar = () => {
 
     return (
         <div className='bg-base-100 shadow-sm'>
-            <div className="navbar max-w-7xl py-2 mx-auto">
+            <div className="navbar max-w-7xl p-4 mx-auto">
                 <div className="flex-1">
                     <Link className="inline-flex items-center justify-center gap-2">
                         <div className="max-w-6">
