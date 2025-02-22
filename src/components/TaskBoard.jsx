@@ -14,6 +14,8 @@ const TaskBoard = () => {
   const { user, loading } = useContext(AuthContext);
   const axiosPublic = useAxiosPublic();
 
+  const [modalData, setModalData] = useState({});
+
   const { data: initialTasks = [], refetch, isPending } = useQuery({
     queryKey: ["taskList", user?.email],
     enabled: !loading,
@@ -119,6 +121,113 @@ const TaskBoard = () => {
 
 
   }
+
+
+  const handleDeleteTask = (taskId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosPublic.delete(`/deleteTask?taskId=${taskId}`)
+          .then(res => {
+            if (res?.data?.deletedCount) {
+              Swal.fire({
+                title: "Deleted!",
+                text: "Your file has been deleted.",
+                icon: "success"
+              });
+
+              refetch();
+            }
+          })
+          .catch(error => console.log(error));
+      }
+    });
+
+
+  }
+
+  const handleEditTask = (taskId) => {
+
+
+    axiosPublic.get(`/taskById?taskId=${taskId}`)
+      .then(res => {
+        setModalData(res.data);
+      })
+      .catch(error => console.log(error));
+
+
+
+    document.getElementById('updateTask').showModal();
+
+  }
+
+  const handleEditTaskData = (e, _id) => {
+    e.preventDefault();
+    const taskId = _id;
+    const taskTitle = e.target.title.value;
+    const taskDescription = e.target.description.value;
+    const category = e.target.category.value;
+
+    const updateTaskInfo = {
+      taskId, taskTitle, taskDescription, category
+    }
+
+    console.log(updateTaskInfo);
+
+    axiosPublic.patch("/updateTask", updateTaskInfo)
+      .then(res => {
+        console.log (res.data)
+        if (res?.data?.modifiedCount>0) {
+          document.getElementById('updateTask').close();
+          refetch();
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Task Updated sucessfully!"
+          });
+        }
+
+        else {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "info",
+            title: "Nothing to Update!"
+          });
+        }
+
+      })
+      .catch(error => console.log(error))
+  }
+
+
+
   return (
     <div className="max-w-7xl mx-auto my-10 font-semibold p-4">
       <DragDropContext onDragEnd={onDragEnd}>
@@ -141,8 +250,8 @@ const TaskBoard = () => {
                         >
                           {/* <h3 className="font-semibold">{task.taskTitle}</h3>
                         <p className="text-sm">{task.taskDescription}</p> */}
-                          
-                          <TaskCard idx={index} key={task?._id} task={task} ></TaskCard>
+
+                          <TaskCard handleDeleteTask={handleDeleteTask} handleEditTask={handleEditTask} idx={index} key={task?._id} task={task} ></TaskCard>
                         </div>
                       )}
                     </Draggable>
@@ -155,7 +264,7 @@ const TaskBoard = () => {
         </div>
       </DragDropContext>
 
-      <button onClick={() => document.getElementById('my_modal_5').showModal()} className="btn btn-primary btn-circle btn-lg fixed bottom-8 right-8 md:right-14 rounded-full shadow-lg"> <IoIosAdd  className="text-3xl"></IoIosAdd>
+      <button onClick={() => document.getElementById('my_modal_5').showModal()} className="btn btn-primary btn-circle btn-lg fixed bottom-8 right-8 md:right-14 rounded-full shadow-lg"> <IoIosAdd className="text-3xl"></IoIosAdd>
       </button>
 
       {/* Modal for Add New Task */}
@@ -168,6 +277,37 @@ const TaskBoard = () => {
               <label className="fieldset-label">Description</label>
               <textarea maxLength={200} required name='description' type="textarea" className="w-full textarea" placeholder="Enter Task Description" />
               <button className="w-full btn btn-primary shadow-none mt-4">Add Task</button>
+            </form>
+          </div>
+
+          <div className="">
+            <form method="dialog">
+              {/* if there is a button in form, it will close the modal */}
+              <button className="btn w-full">Cancel</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
+
+
+      {/* Modal for Update Task */}
+      <dialog id="updateTask" className="modal modal-middle p-4">
+        <div className="card-body rounded-md min-w-xs md:min-w-md bg-base-100">
+          <div>
+            <form onSubmit={(e) => handleEditTaskData(e, modalData?._id)} className='fieldset'>
+              <h3 className='text-center text-xl'>Update Task Information</h3>
+              <label className="fieldset-label">Title</label>
+              <input defaultValue={modalData?.taskTitle} required name='title' maxLength={50} type="text" className="w-full input" placeholder="Enter Task Name" />
+              <label className="fieldset-label">Category</label>
+              <select name="category" className="select w-full" defaultValue={modalData?.category} key={modalData?.category}>
+                <option value="toDo">To-Do</option>
+                <option value="inProgress">In Progress</option>
+                <option value="done">Done</option>
+              </select>
+              <label className="fieldset-label">Description</label>
+              <textarea defaultValue={modalData?.taskDescription} maxLength={200} required name='description' type="textarea" className="w-full textarea" placeholder="Enter Task Description" />
+              <button className="w-full btn btn-primary shadow-none mt-4">Update Task</button>
             </form>
           </div>
 
